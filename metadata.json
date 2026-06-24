@@ -1,0 +1,6 @@
+{
+  "name": "Plot Twist! - Story Builder",
+  "description": "A clean, modern digital notepad vocabulary game designed for mobile-first cooperative storytelling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
