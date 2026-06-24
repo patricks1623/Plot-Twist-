@@ -9,7 +9,9 @@ import {
   Volume2,
   BookMarked,
   Plus,
-  X
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 // Vocabulary Data
@@ -352,6 +354,34 @@ const WORD_MEANINGS: Record<string, { translation: string; definition: string; e
 };
 
 export default function App() {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const saved = localStorage.getItem("plot_twist_theme_v3");
+      if (saved === "light" || saved === "dark") return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
+  });
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    localStorage.setItem("plot_twist_theme_v3", nextTheme);
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem("plot_twist_theme_v3");
+    if (!saved) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = (e: MediaQueryListEvent) => {
+        setTheme(e.matches ? 'dark' : 'light');
+      };
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }, []);
+
   // State for Categories and Meanings (persisted in LocalStorage)
   const [categories, setCategories] = useState<Record<string, string[]>>(() => {
     try {
@@ -673,11 +703,13 @@ export default function App() {
     }
   };
 
+  const isDark = theme === 'dark';
+
   return (
-    <div className="min-h-screen bg-[#E9E5DE] text-gray-800 font-sans p-4 sm:p-8 flex flex-col items-center justify-center antialiased">
+    <div className={`min-h-screen transition-colors duration-300 font-sans p-4 sm:p-8 flex flex-col items-center justify-center antialiased ${isDark ? 'bg-stone-950 text-stone-100' : 'bg-[#E9E5DE] text-gray-800'}`}>
       
       {/* Sleek Interface Notepad Container */}
-      <div className="w-full max-w-[600px] bg-white rounded-xl border border-[#D1CDC7] shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col">
+      <div className={`w-full max-w-[600px] rounded-xl border overflow-hidden flex flex-col transition-colors duration-300 ${isDark ? 'bg-stone-900 border-stone-800 shadow-[0_20px_50px_rgba(0,0,0,0.4)]' : 'bg-white border-[#D1CDC7] shadow-[0_20px_50px_rgba(0,0,0,0.1)]'}`}>
         
         {/* Brand & Main Panel with elegant padded margins */}
         <div className="p-6 sm:p-8 flex flex-col gap-5">
@@ -685,13 +717,27 @@ export default function App() {
           {/* Header Title Section */}
           <div className="flex justify-between items-start gap-2" id="header-section">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-800 flex items-center gap-1.5">
+              <h1 className={`text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-1.5 ${isDark ? 'text-stone-50' : 'text-gray-800'}`}>
                 Plot Twist<span className="text-indigo-600">!</span>
               </h1>
-              <p className="text-xs font-semibold text-gray-400 tracking-wider uppercase">Cooperative Story Builder</p>
+              <p className={`text-xs font-semibold tracking-wider uppercase ${isDark ? 'text-stone-500' : 'text-gray-400'}`}>Cooperative Story Builder</p>
             </div>
             
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-1.5">
+              {/* Theme Toggle Button */}
+              <button 
+                onClick={toggleTheme}
+                className={`p-1.5 rounded-lg border active:translate-y-0.5 transition-all flex items-center justify-center shadow-sm ${
+                  isDark 
+                    ? 'border-stone-700 bg-stone-800 hover:bg-stone-700 text-stone-200' 
+                    : 'border-gray-200 bg-white hover:bg-gray-50 text-gray-600'
+                }`}
+                title={isDark ? "Modo Claro" : "Modo Escuro"}
+                id="theme-toggle"
+              >
+                {isDark ? <Sun size={13} className="text-amber-400" /> : <Moon size={13} className="text-slate-500" />}
+              </button>
+
               <button 
                 onClick={() => {
                   setShowAddWord(!showAddWord);
@@ -700,7 +746,9 @@ export default function App() {
                 className={`px-2.5 py-1.5 rounded-lg border transition-all text-xs font-semibold flex items-center gap-1 shadow-sm active:translate-y-0.5 ${
                   showAddWord 
                     ? "bg-indigo-600 border-indigo-600 text-white" 
-                    : "border-gray-200 bg-white hover:bg-gray-50 text-gray-600"
+                    : isDark 
+                      ? "border-stone-700 bg-stone-800 hover:bg-stone-700 text-stone-200"
+                      : "border-gray-200 bg-white hover:bg-gray-50 text-gray-600"
                 }`}
                 title="Add custom word"
                 id="add-word-toggle"
@@ -714,11 +762,15 @@ export default function App() {
                   setShowInstructions(!showInstructions);
                   if (showAddWord) setShowAddWord(false);
                 }}
-                className="px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 active:translate-y-0.5 transition-all text-xs font-semibold text-gray-600 flex items-center gap-1 shadow-sm"
+                className={`px-2.5 py-1.5 rounded-lg border active:translate-y-0.5 transition-all text-xs font-semibold flex items-center gap-1 shadow-sm ${
+                  isDark 
+                    ? "border-stone-700 bg-stone-800 hover:bg-stone-700 text-stone-200"
+                    : "border-gray-200 bg-white hover:bg-gray-50 text-gray-600"
+                }`}
                 title="How to play"
                 id="how-to-play-toggle"
               >
-                <HelpCircle size={13} className="text-gray-400" />
+                <HelpCircle size={13} className={isDark ? "text-stone-400" : "text-gray-400"} />
                 <span>{showInstructions ? "Hide" : "Rules"}</span>
               </button>
             </div>
@@ -731,16 +783,16 @@ export default function App() {
             }`}
             id="instructions-panel"
           >
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-xs text-gray-600 flex flex-col gap-2 shadow-sm">
-              <div className="flex items-center gap-1.5 font-bold text-gray-800 uppercase tracking-wide">
-                <BookOpen size={14} className="text-indigo-600" />
+            <div className={`border rounded-xl p-4 text-xs flex flex-col gap-2 shadow-sm ${isDark ? 'bg-stone-800/40 border-stone-700 text-stone-300' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
+              <div className={`flex items-center gap-1.5 font-bold uppercase tracking-wide ${isDark ? 'text-stone-200' : 'text-gray-800'}`}>
+                <BookOpen size={14} className="text-indigo-500" />
                 <span>Interactive Notebook Rules</span>
               </div>
-              <ol className="list-decimal list-inside space-y-1 text-gray-700 font-medium leading-relaxed">
+              <ol className={`list-decimal list-inside space-y-1 font-medium leading-relaxed ${isDark ? 'text-stone-300' : 'text-gray-700'}`}>
                 <li>Choose an opening scenario to start your storytelling session.</li>
-                <li>Select a category or click <strong className="text-indigo-600">All Random Draw</strong> to assign your vocabulary words.</li>
+                <li>Select a category or click <strong className="text-indigo-500 font-bold">All Random Draw</strong> to assign your vocabulary words.</li>
                 <li>Use the assigned Connector and all 3 vocabulary terms to continue your group story!</li>
-                <li><span className="text-indigo-600 font-semibold">Dictionary feature:</span> Tap any word sticker pill below to view its English definition, correct usage, and hear its pronunciation!</li>
+                <li><span className="text-indigo-500 font-semibold">Dictionary feature:</span> Tap any word sticker pill below to view its English definition, correct usage, and hear its pronunciation!</li>
               </ol>
             </div>
           </div>
@@ -752,16 +804,16 @@ export default function App() {
             }`}
             id="add-word-panel"
           >
-            <form onSubmit={handleAddWordSubmit} className="bg-indigo-50/50 border border-indigo-100 rounded-xl p-4 flex flex-col gap-3 shadow-sm">
+            <form onSubmit={handleAddWordSubmit} className={`border rounded-xl p-4 flex flex-col gap-3 shadow-sm ${isDark ? 'bg-indigo-950/20 border-indigo-900/40' : 'bg-indigo-50/50 border-indigo-100'}`}>
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1.5 font-bold text-indigo-950 text-xs uppercase tracking-wide">
-                  <Plus size={14} className="text-indigo-600" />
+                <div className={`flex items-center gap-1.5 font-bold text-xs uppercase tracking-wide ${isDark ? 'text-indigo-200' : 'text-indigo-950'}`}>
+                  <Plus size={14} className="text-indigo-500" />
                   <span>Add Custom Term</span>
                 </div>
                 <button 
                   type="button" 
                   onClick={() => setShowAddWord(false)}
-                  className="p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                  className={`p-1 rounded-md transition-colors ${isDark ? 'text-stone-400 hover:text-stone-200 hover:bg-stone-800' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
                 >
                   <X size={14} />
                 </button>
@@ -782,24 +834,24 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Word / Phrase Input */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">Word or Phrase *</label>
+                  <label className={`text-[10px] font-bold uppercase tracking-wide ${isDark ? 'text-stone-400' : 'text-gray-500'}`}>Word or Phrase *</label>
                   <input
                     type="text"
                     placeholder="e.g., Piece of pie"
                     value={newWord}
                     onChange={(e) => setNewWord(e.target.value)}
-                    className="h-9 px-2.5 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                    className={`h-9 px-2.5 rounded-lg border text-xs focus:ring-2 focus:ring-indigo-500 outline-none transition-colors ${isDark ? 'bg-stone-800 border-stone-700 text-stone-100 focus:ring-indigo-400' : 'bg-white border-gray-300 text-gray-800 focus:ring-indigo-500'}`}
                     required
                   />
                 </div>
 
                 {/* Category Selection */}
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">Category *</label>
+                  <label className={`text-[10px] font-bold uppercase tracking-wide ${isDark ? 'text-stone-400' : 'text-gray-500'}`}>Category *</label>
                   <select
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
-                    className="h-9 px-2.5 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-indigo-500 outline-none bg-white cursor-pointer"
+                    className={`h-9 px-2.5 rounded-lg border text-xs focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer transition-colors ${isDark ? 'bg-stone-800 border-stone-700 text-stone-100 focus:ring-indigo-400' : 'bg-white border-gray-300 text-gray-800 focus:ring-indigo-500'}`}
                   >
                     {Object.keys(categories).map((cat) => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -812,13 +864,13 @@ export default function App() {
               {/* Conditionally render custom category input */}
               {newCategory === "NEW" && (
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">New Category Name *</label>
+                  <label className={`text-[10px] font-bold uppercase tracking-wide ${isDark ? 'text-stone-400' : 'text-gray-500'}`}>New Category Name *</label>
                   <input
                     type="text"
                     placeholder="e.g., Idioms & Slang"
                     value={customCategory}
                     onChange={(e) => setCustomCategory(e.target.value)}
-                    className="h-9 px-2.5 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                    className={`h-9 px-2.5 rounded-lg border text-xs focus:ring-2 focus:ring-indigo-500 outline-none transition-colors ${isDark ? 'bg-stone-800 border-stone-700 text-stone-100 focus:ring-indigo-400' : 'bg-white border-gray-300 text-gray-800 focus:ring-indigo-500'}`}
                     required
                   />
                 </div>
@@ -826,24 +878,24 @@ export default function App() {
 
               {/* Definition */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">English Definition *</label>
+                <label className={`text-[10px] font-bold uppercase tracking-wide ${isDark ? 'text-stone-400' : 'text-gray-500'}`}>English Definition *</label>
                 <textarea
                   placeholder="Describe the meaning of the word or phrase in English..."
                   value={newDefinition}
                   onChange={(e) => setNewDefinition(e.target.value)}
-                  className="p-2 h-16 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-indigo-500 outline-none bg-white resize-none"
+                  className={`p-2 h-16 rounded-lg border text-xs focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-colors ${isDark ? 'bg-stone-800 border-stone-700 text-stone-100 focus:ring-indigo-400' : 'bg-white border-gray-300 text-gray-800 focus:ring-indigo-500'}`}
                   required
                 />
               </div>
 
               {/* Example of Use */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">Example Sentence *</label>
+                <label className={`text-[10px] font-bold uppercase tracking-wide ${isDark ? 'text-stone-400' : 'text-gray-500'}`}>Example Sentence *</label>
                 <textarea
                   placeholder="Create an example sentence showing how to use the word..."
                   value={newExample}
                   onChange={(e) => setNewExample(e.target.value)}
-                  className="p-2 h-16 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-indigo-500 outline-none bg-white resize-none"
+                  className={`p-2 h-16 rounded-lg border text-xs focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-colors ${isDark ? 'bg-stone-800 border-stone-700 text-stone-100 focus:ring-indigo-400' : 'bg-white border-gray-300 text-gray-800 focus:ring-indigo-500'}`}
                   required
                 />
               </div>
@@ -852,7 +904,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={handleResetToDefaults}
-                  className="text-[10px] font-bold text-stone-400 hover:text-red-500 underline transition-colors"
+                  className={`text-[10px] font-bold underline transition-colors ${isDark ? 'text-stone-500 hover:text-red-400' : 'text-stone-400 hover:text-red-500'}`}
                 >
                   Reset to Defaults
                 </button>
@@ -861,7 +913,7 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setShowAddWord(false)}
-                    className="h-8 px-3 rounded-lg border border-gray-300 text-xs font-semibold text-gray-600 bg-white hover:bg-gray-50"
+                    className={`h-8 px-3 rounded-lg border text-xs font-semibold transition-colors ${isDark ? 'border-stone-700 text-stone-300 bg-stone-800 hover:bg-stone-700' : 'border-gray-300 text-gray-600 bg-white hover:bg-gray-50'}`}
                   >
                     Cancel
                   </button>
@@ -877,9 +929,9 @@ export default function App() {
           </div>
 
           {/* Step 1: Starting Prompt Box - Sleek minimal card with user customization */}
-          <div className="bg-stone-50 border-l-4 border-stone-400 rounded-r-xl p-3.5 flex flex-col gap-2 relative" id="prompt-box">
+          <div className={`border-l-4 rounded-r-xl p-3.5 flex flex-col gap-2 relative transition-colors duration-300 ${isDark ? 'bg-stone-800/30 border-stone-600' : 'bg-stone-50 border-stone-400'}`} id="prompt-box">
             <div className="flex justify-between items-center">
-              <span className="text-[10px] font-bold tracking-widest text-stone-500 uppercase">
+              <span className={`text-[10px] font-bold tracking-widest uppercase ${isDark ? 'text-stone-400' : 'text-stone-500'}`}>
                 Starting Prompt Hook ({prompts.length > 0 ? `${currentPromptIndex + 1}/${prompts.length}` : "0/0"})
               </span>
               <div className="flex items-center gap-1.5">
@@ -887,7 +939,7 @@ export default function App() {
                 {prompts.length > 1 && (
                   <button
                     onClick={handleDeletePrompt}
-                    className="p-1 rounded bg-white border border-gray-200 hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors shadow-sm"
+                    className={`p-1 rounded border transition-colors shadow-sm ${isDark ? 'bg-stone-800 border-stone-700 text-stone-400 hover:text-red-400 hover:bg-stone-700' : 'bg-white border-gray-200 hover:bg-red-50 text-gray-400 hover:text-red-600'}`}
                     title="Delete This Prompt"
                     id="delete-prompt"
                   >
@@ -901,7 +953,9 @@ export default function App() {
                   className={`p-1 rounded border transition-colors shadow-sm ${
                     showAddPrompt 
                       ? "bg-indigo-600 border-indigo-600 text-white" 
-                      : "bg-white border-gray-200 text-gray-500 hover:text-indigo-600 hover:bg-gray-50"
+                      : isDark 
+                        ? "bg-stone-800 border-stone-700 text-stone-400 hover:text-indigo-400 hover:bg-stone-700"
+                        : "bg-white border-gray-200 text-gray-500 hover:text-indigo-600 hover:bg-gray-50"
                   }`}
                   title="Add Custom Starting Prompt"
                   id="add-prompt-toggle"
@@ -913,7 +967,7 @@ export default function App() {
                 {prompts.length > 1 && (
                   <button
                     onClick={handleNextPrompt}
-                    className="p-1 rounded bg-white border border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-gray-800 transition-colors shadow-sm"
+                    className={`p-1 rounded border transition-colors shadow-sm ${isDark ? 'bg-stone-800 border-stone-700 text-stone-400 hover:text-stone-200 hover:bg-stone-700' : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-500 hover:text-gray-800'}`}
                     title="Cycle Next Prompt"
                     id="cycle-prompt"
                   >
@@ -929,7 +983,7 @@ export default function App() {
                   placeholder="Type your own custom story opening prompt..."
                   value={newPromptText}
                   onChange={(e) => setNewPromptText(e.target.value)}
-                  className="p-2 h-16 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-indigo-500 outline-none bg-white resize-none font-serif italic text-stone-700"
+                  className={`p-2 h-16 rounded-lg border text-xs focus:ring-2 focus:ring-indigo-500 outline-none resize-none font-serif italic transition-colors ${isDark ? 'bg-stone-800 border-stone-700 text-stone-100 focus:ring-indigo-400' : 'bg-white border-gray-300 text-stone-700'}`}
                   required
                   autoFocus
                 />
@@ -940,7 +994,7 @@ export default function App() {
                       setShowAddPrompt(false);
                       setNewPromptText("");
                     }}
-                    className="px-2.5 py-1 rounded text-[10px] font-semibold border border-gray-300 text-gray-600 bg-white hover:bg-gray-50"
+                    className={`px-2.5 py-1 rounded text-[10px] font-semibold border transition-colors ${isDark ? 'border-stone-700 text-stone-300 bg-stone-800 hover:bg-stone-700' : 'border-gray-300 text-gray-600 bg-white hover:bg-gray-50'}`}
                   >
                     Cancel
                   </button>
@@ -953,7 +1007,7 @@ export default function App() {
                 </div>
               </form>
             ) : (
-              <p className="text-sm italic text-stone-600 leading-relaxed font-serif">
+              <p className={`text-sm italic leading-relaxed font-serif ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
                 "{prompts[currentPromptIndex] || "No starting prompts available. Click + to add one!"}"
               </p>
             )}
@@ -965,11 +1019,11 @@ export default function App() {
               <select 
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="flex-1 h-10 px-3 rounded-lg border border-gray-300 text-xs font-medium focus:ring-2 focus:ring-indigo-500 bg-white outline-none cursor-pointer"
+                className={`flex-1 h-10 px-3 rounded-lg border text-xs font-medium focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer transition-colors ${isDark ? 'bg-stone-800 border-stone-700 text-stone-100 focus:ring-indigo-400' : 'bg-white border-gray-300 text-gray-800'}`}
                 id="category-dropdown"
               >
                 {Object.keys(categories).map((cat) => (
-                  <option key={cat} value={cat}>
+                  <option key={cat} value={cat} className={isDark ? 'bg-stone-800 text-stone-100' : 'bg-white text-gray-800'}>
                     {cat === "Home & Routine" ? "🏠" : cat === "Productivity & Places" ? "💼" : cat === "Relationships" ? "❤️" : cat === "Appearance & Personality" ? "🎭" : cat === "Objects" ? "🎒" : "✨"} {cat}
                   </option>
                 ))}
@@ -977,7 +1031,7 @@ export default function App() {
 
               <button
                 onClick={handleGenerateFromCategory}
-                className="h-10 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-colors whitespace-nowrap flex items-center justify-center gap-1.5 shadow-sm"
+                className="h-10 px-4 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition-all active:translate-y-0.5 whitespace-nowrap flex items-center justify-center gap-1.5 shadow-sm"
                 id="generate-from-category"
               >
                 <Sparkles size={13} />
@@ -987,7 +1041,7 @@ export default function App() {
 
             <button
               onClick={handleGenerateRandom}
-              className="w-full h-10 border-2 border-indigo-600 text-indigo-600 text-xs font-semibold rounded-lg hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+              className={`w-full h-10 border-2 text-xs font-semibold rounded-lg transition-all active:translate-y-0.5 flex items-center justify-center gap-1.5 ${isDark ? 'border-indigo-500 text-indigo-400 hover:bg-indigo-950/20' : 'border-indigo-600 text-indigo-600 hover:bg-indigo-50'}`}
               id="generate-random"
             >
               <Sparkles size={13} />
@@ -997,8 +1051,8 @@ export default function App() {
 
           {/* Step 3: Immersive Term Output display styled with beautiful Indigo pills */}
           {currentWords.length > 0 && (
-            <section id="outputDisplay" className="p-4 bg-indigo-50 rounded-xl border border-indigo-100 flex flex-wrap gap-2 items-center">
-              <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-extrabold w-full mb-1">
+            <section id="outputDisplay" className={`p-4 rounded-xl border flex flex-wrap gap-2 items-center transition-colors duration-300 ${isDark ? 'bg-indigo-950/20 border-indigo-900/40' : 'bg-indigo-50 border-indigo-100'}`}>
+              <span className={`text-[10px] uppercase tracking-widest font-extrabold w-full mb-1 ${isDark ? 'text-indigo-400/90' : 'text-indigo-400'}`}>
                 Tap any assigned term below to view its meaning:
               </span>
               
@@ -1007,13 +1061,19 @@ export default function App() {
                 onClick={() => setSelectedMeaningWord(currentConnector)}
                 className={`px-3 py-1.5 rounded-full text-xs font-bold font-sans border transition-all cursor-pointer shadow-sm flex items-center gap-1.5 ${
                   selectedMeaningWord === currentConnector 
-                    ? "bg-indigo-600 border-indigo-600 text-white scale-95 ring-2 ring-indigo-300" 
-                    : "bg-gray-100 border-gray-200 text-gray-700 hover:bg-gray-200"
+                    ? "bg-indigo-600 border-indigo-600 text-white scale-95 ring-2 ring-indigo-350" 
+                    : isDark 
+                      ? "bg-stone-800 border-stone-700 text-stone-200 hover:bg-stone-700" 
+                      : "bg-gray-100 border-gray-200 text-gray-700 hover:bg-gray-200"
                 }`}
                 id="connector-card"
               >
                 <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${
-                  selectedMeaningWord === currentConnector ? "bg-indigo-700 text-indigo-100" : "bg-gray-200 text-gray-600"
+                  selectedMeaningWord === currentConnector 
+                    ? "bg-indigo-700 text-indigo-100" 
+                    : isDark 
+                      ? "bg-stone-700 text-stone-300" 
+                      : "bg-gray-200 text-gray-600"
                 }`}>CONN</span>
                 <span>{currentConnector}</span>
               </button>
@@ -1025,13 +1085,19 @@ export default function App() {
                   onClick={() => setSelectedMeaningWord(word)}
                   className={`px-3 py-1.5 rounded-full text-xs font-bold font-sans border transition-all cursor-pointer shadow-sm flex items-center gap-1.5 ${
                     selectedMeaningWord === word 
-                      ? "bg-indigo-600 border-indigo-600 text-white scale-95 ring-2 ring-indigo-300" 
-                      : "bg-indigo-50 border-indigo-150 text-indigo-700 hover:bg-indigo-100"
+                      ? "bg-indigo-600 border-indigo-600 text-white scale-95 ring-2 ring-indigo-350" 
+                      : isDark 
+                        ? "bg-stone-800 border-stone-700 text-indigo-400 hover:bg-stone-700" 
+                        : "bg-indigo-50 border-indigo-150 text-indigo-700 hover:bg-indigo-100"
                   }`}
                   id={`vocab-card-${idx + 1}`}
                 >
                   <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${
-                    selectedMeaningWord === word ? "bg-indigo-700 text-indigo-100" : "bg-[#E0E7FF] text-[#4338CA]"
+                    selectedMeaningWord === word 
+                      ? "bg-indigo-700 text-indigo-100" 
+                      : isDark 
+                        ? "bg-indigo-950/50 text-indigo-300" 
+                        : "bg-[#E0E7FF] text-[#4338CA]"
                   }`}>VOCAB</span>
                   <span>{word}</span>
                 </button>
@@ -1041,15 +1107,15 @@ export default function App() {
 
           {/* Step 4: Dictionary Meaning Display Board */}
           {currentWords.length > 0 && selectedMeaningWord && (
-            <section id="meaningCard" className="p-5 bg-stone-50 rounded-xl border border-gray-200 shadow-inner flex flex-col gap-3.5 transition-all duration-300">
+            <section id="meaningCard" className={`p-5 rounded-xl border shadow-inner flex flex-col gap-3.5 transition-all duration-300 ${isDark ? 'bg-stone-900 border-stone-800' : 'bg-stone-50 border-gray-200'}`}>
               
-              <div className="flex justify-between items-start border-b border-gray-200 pb-2.5">
+              <div className={`flex justify-between items-start border-b pb-2.5 ${isDark ? 'border-stone-800' : 'border-gray-200'}`}>
                 <div className="flex flex-col gap-0.5">
                   <div className="flex items-center gap-1.5">
-                    <BookMarked size={16} className="text-indigo-600" />
-                    <span className="text-sm font-extrabold text-gray-900 tracking-tight">{selectedMeaningWord}</span>
+                    <BookMarked size={16} className="text-indigo-500" />
+                    <span className={`text-sm font-extrabold tracking-tight ${isDark ? 'text-stone-100' : 'text-gray-900'}`}>{selectedMeaningWord}</span>
                   </div>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-stone-500' : 'text-gray-400'}`}>
                     {CONNECTORS.includes(selectedMeaningWord) ? "Connector Word" : "Vocabulary Phrase"}
                   </span>
                 </div>
@@ -1058,7 +1124,7 @@ export default function App() {
                   {/* Speech Button */}
                   <button 
                     onClick={() => handleSpeak(selectedMeaningWord)}
-                    className="p-2 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-600 hover:bg-indigo-100 active:scale-95 transition-all"
+                    className={`p-2 rounded-lg border active:scale-95 transition-all ${isDark ? 'bg-indigo-950/30 border-indigo-900 text-indigo-400 hover:bg-indigo-900/40' : 'bg-indigo-50 border-indigo-100 text-indigo-600 hover:bg-indigo-100'}`}
                     title="Ouvrir Pronúncia (Pronounce)"
                   >
                     <Volume2 size={14} />
@@ -1070,7 +1136,9 @@ export default function App() {
                     className={`p-2 rounded-lg border transition-all active:scale-95 flex items-center justify-center ${
                       copiedWord === selectedMeaningWord
                         ? "bg-emerald-500 border-emerald-400 text-white"
-                        : "bg-white border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-50"
+                        : isDark 
+                          ? "bg-stone-800 border-stone-700 text-stone-400 hover:text-stone-200 hover:bg-stone-700" 
+                          : "bg-white border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-50"
                     }`}
                     title="Copiar palavra (Copy)"
                   >
@@ -1081,26 +1149,26 @@ export default function App() {
 
               {/* Definition Definição section */}
               <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Definição (English)</span>
-                <p className="text-xs font-medium text-stone-600 leading-relaxed">
+                <span className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-stone-500' : 'text-stone-400'}`}>Definição (English)</span>
+                <p className={`text-xs font-medium leading-relaxed ${isDark ? 'text-stone-300' : 'text-stone-600'}`}>
                   {activeMeaning.definition}
                 </p>
               </div>
 
               {/* Example Sentence Exemplo section */}
-              <div className="flex flex-col gap-1.5 border-t border-stone-200 pt-3">
+              <div className={`flex flex-col gap-1.5 border-t pt-3 ${isDark ? 'border-stone-800' : 'border-stone-200'}`}>
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Exemplo de Uso</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-stone-500' : 'text-stone-400'}`}>Exemplo de Uso</span>
                   <button 
                     onClick={() => handleSpeak(activeMeaning.example)}
-                    className="text-[10px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                    className={`text-[10px] font-semibold flex items-center gap-1 ${isDark ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-800'}`}
                     title="Pronunciar Exemplo"
                   >
                     <Volume2 size={12} />
                     Ouvir exemplo
                   </button>
                 </div>
-                <p className="text-xs italic text-stone-700 bg-stone-100 border border-stone-200 p-3 rounded-lg leading-relaxed font-serif">
+                <p className={`text-xs italic p-3 rounded-lg leading-relaxed font-serif border ${isDark ? 'text-stone-300 bg-stone-800/50 border-stone-700' : 'text-stone-700 bg-stone-100 border-stone-200'}`}>
                   "{activeMeaning.example}"
                 </p>
               </div>
