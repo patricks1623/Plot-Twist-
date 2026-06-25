@@ -88,6 +88,10 @@ const STARTING_PROMPTS = [
   "While walking back from the supermarket, I realized my bag had a tiny hole at the bottom...",
   "Deep in conversation at the coffee shop, we both suddenly stopped as we saw who just walked in...",
   "Sighing, I set the alarm for 5 AM, hoping to fold the clothes early, but my dog had other plans...",
+  "I was halfway through washing the dishes when I noticed the water wasn't draining anymore...",
+  "I was already running late for the flight when I realized I had left something very important at the hotel...",
+  "I was already waiting in line to pay when I reached into my pocket and realized my wallet was nowhere to be found...",
+  "The waiter had just placed our food on the table when my friend looked at me with an expression I had never seen before...",
 ];
 
 // Meaning dictionary with translation, definition, and example
@@ -434,7 +438,23 @@ export default function App() {
   const [prompts, setPrompts] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem("plot_twist_prompts_v3");
-      return saved ? JSON.parse(saved) : STARTING_PROMPTS;
+      if (saved) {
+        const parsed = JSON.parse(saved) as string[];
+        let updated = [...parsed];
+        let hasChanges = false;
+        STARTING_PROMPTS.forEach(p => {
+          if (!updated.includes(p)) {
+            updated.push(p);
+            hasChanges = true;
+          }
+        });
+        if (hasChanges) {
+          localStorage.setItem("plot_twist_prompts_v3", JSON.stringify(updated));
+          return updated;
+        }
+        return parsed;
+      }
+      return STARTING_PROMPTS;
     } catch {
       return STARTING_PROMPTS;
     }
