@@ -28,57 +28,121 @@ const CONNECTORS = [
 
 const CATEGORIES: Record<string, string[]> = {
   "Home & Routine": [
-    "Set the alarm for", 
-    "Turn on/off the fan", 
-    "Put the phone on the charger", 
-    "To fold the clothes", 
-    "To change clothes", 
-    "To lie down", 
-    "Bedsheet", 
-    "Blanket"
+    "Set the alarm for",
+    "Open the curtains/drape",
+    "Turn on / turn off the fan",
+    "I'm going to charge my phone /Put the phone on the charger",
+    "to fold the clothes",
+    "to change clothes",
+    "to lie down/to go to bed",
+    "Leave my bag on the chair",
+    "sheet/bedsheet/sheets",
+    "blanket",
+    "I start my day by",
+    "How often do you...?"
   ],
   "Productivity & Places": [
-    "Check my emails", 
-    "Take a short break", 
-    "Lose track of time", 
-    "Supermarket", 
-    "Bakery", 
-    "Pharmacy", 
-    "Gym", 
-    "Coffee shop"
+    "figure out",
+    "pick up",
+    "check my emails",
+    "take a short break",
+    "lose track of time",
+    "What does she/he do for a living?",
+    "gatherings / meetings"
   ],
   "Relationships": [
-    "Count on", 
-    "Hang out with", 
-    "Grow apart", 
-    "Barely talk", 
-    "Catch up", 
-    "Hit it off", 
-    "Siblings", 
-    "Close friend"
+    "Siblings",
+    "Sister-in-law/Brother-in-law",
+    "Uncle/Aunt",
+    "Nephew/Niece",
+    "Stepmother/stepfather",
+    "What is she/he like?",
+    "Husband/wife",
+    "Relatives",
+    "acquaintance",
+    "close friend",
+    "childhood friend",
+    "count on",
+    "We have been friends for/since",
+    "hang out with",
+    "grow apart",
+    "Barely talk",
+    "lasts forever",
+    "Catch up",
+    "hit it off (with someone)",
+    "to get together with",
+    "only child",
+    "get on well with",
+    "close with",
+    "what are your parents like?",
+    "do they get along well with each other?",
+    "Bonds",
+    "value",
+    "to stand by someone",
+    "on the same wavelength",
+    "click with"
   ],
   "Appearance & Personality": [
-    "Silly", 
-    "Laid-back", 
-    "Strict", 
-    "Stubborn", 
-    "He is very tall", 
-    "She is quite short", 
-    "Bald", 
-    "My hair goes down to my waist"
+    "What does she/he look like?",
+    "silly",
+    "come along",
+    "outgoing",
+    "laid-back",
+    "strict",
+    "stubborn",
+    "quite",
+    "old-fashioned",
+    "pretty",
+    "forgetful",
+    "cheerful",
+    "over the years",
+    "went on",
+    "showcase",
+    "revolve around - something/someone",
+    "invasive",
+    "gender roles",
+    "rubs me the wrong way",
+    "easygoing",
+    "fun to be around",
+    "help or hurt",
+    "own good",
+    "would rather",
+    "two-faced",
+    "short/tall",
+    "average height/medium height",
+    "He is very tall",
+    "She is quite short",
+    "thin",
+    "fat",
+    "slender",
+    "slim",
+    "lean",
+    "petite",
+    "slight",
+    "curvy",
+    "voluptuous",
+    "stocky",
+    "I have blond hair",
+    "I am blonde-haired",
+    "I have fair hair",
+    "I have dark eyes",
+    "bald",
+    "short hair",
+    "long hair",
+    "My hair goes down to my waist",
+    "straight hair",
+    "wavy hair",
+    "curly hair",
+    "afro hair",
+    "soft hair/damaged hair",
+    "silky hair",
+    "Dry hair",
+    "fair skin",
+    "dark skin",
+    "Shape",
+    "a few of"
   ],
-  "Objects": [
-    "Smartphone / Cell phone",
-    "Keys",
-    "Wallet",
-    "Earphones / Headphones",
-    "Backpack / Bag",
-    "Water bottle",
-    "Glasses / Sunglasses",
-    "Notebook",
-    "Charger",
-    "Watch / Smartwatch"
-  ]
+  "Objects": []
 };
 
 const STARTING_PROMPTS = [
@@ -141,219 +205,544 @@ const WORD_MEANINGS: Record<string, { translation: string; definition: string; e
   // Home & Routine
   "Set the alarm for": {
     translation: "Definir o alarme para",
-    definition: "To adjust a clock to make a sound at a specific time in the morning.",
-    example: "I need to set the alarm for 6 AM to make it to the gym."
+    definition: "To set a clock or phone to make a sound at a specific time, usually to wake up.",
+    example: "I need to set the alarm for 6:00 AM so I don't miss my early bus."
   },
-  "Turn on/off the fan": {
-    translation: "Ligar/desligar o ventilador",
-    definition: "To start or stop the operation of an electric fan.",
-    example: "It is getting really warm here, please turn on the fan."
+  "Open the curtains/drape": {
+    translation: "Abrir as cortinas",
+    definition: "To pull apart the window coverings to let light into the room.",
+    example: "The first thing she does in the morning is open the curtains to let the sunshine in."
   },
-  "Put the phone on the charger": {
-    translation: "Colocar o celular no carregador",
-    definition: "To connect a mobile phone to an electrical source to charge the battery.",
-    example: "My battery is at 5%, I must put the phone on the charger."
+  "Turn on / turn off the fan": {
+    translation: "Ligar / desligar o ventilador",
+    definition: "To start or stop an electric fan to circulate air and cool down.",
+    example: "It is very warm in here; could you please turn on the fan?"
   },
-  "To fold the clothes": {
+  "I'm going to charge my phone /Put the phone on the charger": {
+    translation: "Vou carregar meu celular / Colocar o celular no carregador",
+    definition: "To connect a mobile phone to an electrical outlet to restore its battery power.",
+    example: "My phone is at 2%, so I'm going to charge my phone right now."
+  },
+  "to fold the clothes": {
     translation: "Dobrar as roupas",
-    definition: "To bend clothes neatly so they can be stored in a drawer or closet.",
-    example: "After washing, my mother asked me to fold the clothes."
+    definition: "To bend and smooth out clothing neatly for storage in a drawer or shelf.",
+    example: "After doing the laundry, I sat on the bed to fold the clothes."
   },
-  "To change clothes": {
+  "to change clothes": {
     translation: "Trocar de roupa",
     definition: "To take off the clothes you are wearing and put on different ones.",
-    example: "I will change clothes quickly before we go to the restaurant."
+    example: "Give me five minutes to change clothes before we go to the dinner party."
   },
-  "To lie down": {
-    translation: "Deitar-se",
-    definition: "To move your body into a horizontal position, usually on a bed or sofa to rest.",
-    example: "I am feeling extremely tired, I need to lie down for a few minutes."
+  "to lie down/to go to bed": {
+    translation: "Deitar-se / Ir para a cama",
+    definition: "To place your body in a flat position to rest, relax, or sleep.",
+    example: "I had a very long day, so I'm ready to lie down and go to bed."
   },
-  "Bedsheet": {
-    translation: "Lençol",
-    definition: "A large piece of cloth used to cover a bed.",
-    example: "We put a clean white bedsheet on the guest bed."
+  "Leave my bag on the chair": {
+    translation: "Deixar minha bolsa na cadeira",
+    definition: "To put down a backpack or purse on a seating furniture when arriving somewhere.",
+    example: "When I got home, I decided to leave my bag on the chair near the door."
   },
-  "Blanket": {
+  "sheet/bedsheet/sheets": {
+    translation: "Lençol / Lençóis",
+    definition: "A large piece of cloth used to cover a bed mattress and to sleep under.",
+    example: "I love the feeling of clean, freshly washed sheets on my bed."
+  },
+  "blanket": {
     translation: "Cobertor / Manta",
-    definition: "A warm cover made of wool or thick fabric, used on a bed.",
-    example: "It gets freezing during winter nights, so I sleep with a heavy blanket."
+    definition: "A thick, warm cover made of wool or fabric used on a bed to stay warm.",
+    example: "It was freezing cold last night, so I pulled a heavy blanket over myself."
+  },
+  "I start my day by": {
+    translation: "Eu começo o meu dia...",
+    definition: "A phrase used to describe the very first activity someone does in the morning.",
+    example: "I start my day by drinking a large glass of water and meditating."
+  },
+  "How often do you...?": {
+    translation: "Com que frequência você...?",
+    definition: "A question used to ask about the frequency of an action or habit.",
+    example: "How often do you go to the supermarket to buy fresh vegetables?"
   },
 
   // Productivity & Places
-  "Check my emails": {
+  "figure out": {
+    translation: "Descobrir / Compreender / Encontrar uma solução",
+    definition: "To solve a problem or understand something through thinking and reasoning.",
+    example: "I need to figure out how to solve this math equation before tomorrow."
+  },
+  "pick up": {
+    translation: "Pegar / Buscar / Colecionar",
+    definition: "To lift someone or something up, or to go get someone/something from a place.",
+    example: "Can you pick up some fresh bread from the bakery on your way home?"
+  },
+  "check my emails": {
     translation: "Verificar meus e-mails",
-    definition: "To open your email inbox to see if you have received new messages.",
-    example: "The first thing I do when I arrive at the office is check my emails."
+    definition: "To access your digital inbox to read and respond to messages.",
+    example: "I usually check my emails first thing when I arrive at the office."
   },
-  "Take a short break": {
+  "take a short break": {
     translation: "Fazer uma pequena pausa",
-    definition: "To stop working or studying for a brief time to rest.",
-    example: "After writing for two hours, I took a short break to stretch."
+    definition: "To pause an activity, study, or work for a brief moment to rest.",
+    example: "After studying English for two hours, I decided to take a short break."
   },
-  "Lose track of time": {
+  "lose track of time": {
     translation: "Perder a noção do tempo",
-    definition: "To become so involved in something that you do not notice the time passing.",
-    example: "When I play video games, I always lose track of time."
+    definition: "To fail to notice how much time has passed because you are so focused on something.",
+    example: "I was reading such an interesting book that I completely lost track of time."
   },
-  "Supermarket": {
-    translation: "Supermercado",
-    definition: "A large shop that sells food, drinks, and household items.",
-    example: "We bought fresh fruits and vegetables at the local supermarket."
+  "What does she/he do for a living?": {
+    translation: "O que ela/ele faz da vida? / Qual a profissão dela/dele?",
+    definition: "A question asking about someone's job, profession, or occupation.",
+    example: "I met your cousin yesterday. What does she do for a living?"
   },
-  "Bakery": {
-    translation: "Padaria",
-    definition: "A place where bread, cakes, and pastries are made and sold.",
-    example: "She goes to the bakery every morning to buy fresh warm rolls."
-  },
-  "Pharmacy": {
-    translation: "Farmácia",
-    definition: "A shop where medicines are prepared and sold.",
-    example: "I need to go to the pharmacy to get some pain relievers."
-  },
-  "Gym": {
-    translation: "Academia",
-    definition: "A room or hall with equipment for physical exercise.",
-    example: "He lifts weights and runs on the treadmill at the gym."
-  },
-  "Coffee shop": {
-    translation: "Cafeteria",
-    definition: "A small restaurant where you can buy coffee, drinks, and light meals.",
-    example: "Let's meet at the coffee shop around the corner for an espresso."
+  "gatherings / meetings": {
+    translation: "Encontros / Reuniões",
+    definition: "Social assemblies or professional sessions where people come together.",
+    example: "Our company holds weekly meetings, but I prefer informal family gatherings."
   },
 
   // Relationships
-  "Count on": {
-    translation: "Contar com (alguém)",
-    definition: "To rely on someone or be confident that they will help you.",
-    example: "You can always count on me whenever you have a problem."
+  "Siblings": {
+    translation: "Irmãos",
+    definition: "A person's brothers or sisters.",
+    example: "I have two siblings: an older brother and a younger sister."
   },
-  "Hang out with": {
+  "Sister-in-law/Brother-in-law": {
+    translation: "Cunhada / Cunhado",
+    definition: "The sister or brother of one's spouse, or the spouse of one's sibling.",
+    example: "My brother-in-law is very laid-back and we get along really well."
+  },
+  "Uncle/Aunt": {
+    translation: "Tio / Tia",
+    definition: "The brother or sister of one's parent, or the spouse of one's parent's sibling.",
+    example: "My aunt always brings delicious chocolate cakes to our family gatherings."
+  },
+  "Nephew/Niece": {
+    translation: "Sobrinho / Sobrinha",
+    definition: "A son or daughter of one's brother or sister.",
+    example: "My little niece is very cheerful and loves to play outside."
+  },
+  "Stepmother/stepfather": {
+    translation: "Madrasta / Padrasto",
+    definition: "The spouse of one's biological mother or father, who is not their biological parent.",
+    example: "He has a great relationship with his stepfather, who helped raise him."
+  },
+  "What is she/he like?": {
+    translation: "Como ela/ele é? (personalidade/caráter)",
+    definition: "A question asking about someone's personality, behavior, or character traits.",
+    example: "You mentioned your new flatmate; what is he like?"
+  },
+  "Husband/wife": {
+    translation: "Marido / Esposa",
+    definition: "The male or female partner in a marriage.",
+    example: "She lives with her husband in a small apartment downtown."
+  },
+  "Relatives": {
+    translation: "Parentes",
+    definition: "Members of your wider family, such as cousins, aunts, and uncles.",
+    example: "All of our relatives gather at my grandmother's house for Christmas."
+  },
+  "acquaintance": {
+    translation: "Conhecido(a)",
+    definition: "Someone you know slightly, but who is not a close friend.",
+    example: "I wouldn't call him a friend; he is just an acquaintance from college."
+  },
+  "close friend": {
+    translation: "Amigo(a) próximo(a)",
+    definition: "A trusted companion with whom you share a deep connection and secrets.",
+    example: "She is a close friend of mine, and I can tell her absolutely anything."
+  },
+  "childhood friend": {
+    translation: "Amigo(a) de infância",
+    definition: "A friend whom you have known since you were very young children.",
+    example: "We met in kindergarten, so he is my oldest childhood friend."
+  },
+  "count on": {
+    translation: "Contar com",
+    definition: "To rely or depend on someone for support, help, or loyalty.",
+    example: "No matter what happens, I know I can count on my best friend."
+  },
+  "We have been friends for/since": {
+    translation: "Nós somos amigos há/desde",
+    definition: "A phrase used to express the duration or starting point of a friendship.",
+    example: "We have been friends since high school, which was ten years ago."
+  },
+  "hang out with": {
     translation: "Sair com / Passar tempo com",
-    definition: "To spend time with someone in a friendly and informal way.",
-    example: "On weekends, I love to hang out with my close friends."
+    definition: "To spend free time in an informal and relaxed way with someone.",
+    example: "On Saturday afternoons, I like to hang out with my classmates."
   },
-  "Grow apart": {
-    translation: "Afastar-se / Distanciar-se",
-    definition: "To gradually become less friendly or lose a close relationship with someone.",
-    example: "After high school, we started to grow apart as we went to different universities."
+  "grow apart": {
+    translation: "Distanciar-se / Afastar-se",
+    definition: "To gradually lose a close relationship with someone over time.",
+    example: "We went to different colleges, and unfortunately, we started to grow apart."
   },
   "Barely talk": {
     translation: "Mal se falar",
-    definition: "To speak to someone very rarely or almost never.",
-    example: "They used to be best friends, but now they barely talk."
+    definition: "To have very little communication or conversation with someone.",
+    example: "We had a big argument last month, and now we barely talk."
+  },
+  "lasts forever": {
+    translation: "Dura para sempre",
+    definition: "Something that continues to exist or hold value for an infinite duration.",
+    example: "A true friendship is built on trust and lasts forever."
   },
   "Catch up": {
-    translation: "Colocar o papo em dia",
-    definition: "To talk to someone you haven't seen in a while to find out what has happened in their life.",
-    example: "Let's grab a coffee and catch up on all the news."
+    translation: "Colocar o papo em dia / Atualizar-se",
+    definition: "To talk to an old friend to find out what has happened in their life recently.",
+    example: "We haven't seen each other in months; let's get together and catch up!"
   },
-  "Hit it off": {
-    translation: "Dar-se bem de primeira / Bater o santo",
-    definition: "To like each other and become friendly immediately upon meeting.",
-    example: "At the party, we hit it off right away and talked for hours."
+  "hit it off (with someone)": {
+    translation: "Dar-se muito bem de cara / Sintonia imediata",
+    definition: "To immediately become friendly and click with someone upon meeting.",
+    example: "At the conference, I hit it off with a developer and we talked for hours."
   },
-  "Siblings": {
-    translation: "Irmãos (no plural, masculino e feminino)",
-    definition: "Brothers and sisters.",
-    example: "I have three siblings: two brothers and one sister."
+  "to get together with": {
+    translation: "Reunir-se com / Encontrar-se com",
+    definition: "To meet socially with someone or a group of people.",
+    example: "I love to get together with my cousins during the summer holidays."
   },
-  "Close friend": {
-    translation: "Amigo próximo / Amigo do peito",
-    definition: "A person you know well and like very much, with high trust.",
-    example: "Maria is a close friend of mine; we tell each other everything."
+  "only child": {
+    translation: "Filho(a) único(a)",
+    definition: "A person who has no siblings (brothers or sisters).",
+    example: "She is an only child, so she received a lot of attention from her parents."
+  },
+  "get on well with": {
+    translation: "Dar-se bem com",
+    definition: "To have a friendly, smooth relationship with someone.",
+    example: "I get on well with my sister-in-law; we have a lot in common."
+  },
+  "close with": {
+    translation: "Próximo(a) de / Íntimo(a) de",
+    definition: "Having a strong emotional connection or friendship with someone.",
+    example: "I am very close with my grandparents and visit them every week."
+  },
+  "what are your parents like?": {
+    translation: "Como são seus pais? (personalidade/comportamento)",
+    definition: "A question asking about the character, nature, and personality of your parents.",
+    example: "Tell me, what are your parents like? Are they strict or laid-back?"
+  },
+  "do they get along well with each other?": {
+    translation: "Eles se dão bem um com o outro?",
+    definition: "A question asking if two or more people have a harmonious relationship.",
+    example: "My siblings argue occasionally, but generally, do they get along well with each other?"
+  },
+  "Bonds": {
+    translation: "Laços / Vínculos",
+    definition: "Strong connections or ties between family members or friends.",
+    example: "Family gatherings help to strengthen the bonds between relatives."
+  },
+  "value": {
+    translation: "Valorizar / Valor",
+    definition: "To consider someone or something as important, highly appreciated, or precious.",
+    example: "I deeply value my childhood friend because she always supports me."
+  },
+  "to stand by someone": {
+    translation: "Apoiar alguém / Ficar ao lado de alguém",
+    definition: "To remain loyal to someone and support them in a difficult situation.",
+    example: "A true partner will always stand by you through thick and thin."
+  },
+  "on the same wavelength": {
+    translation: "Na mesma sintonia / Pensando igual",
+    definition: "Thinking in a very similar way or having a mutual understanding.",
+    example: "We hit it off immediately because we are completely on the same wavelength."
+  },
+  "click with": {
+    translation: "Dar liga / Dar-se bem imediatamente",
+    definition: "To instantly connect and form a good relationship with someone.",
+    example: "As soon as I started working with my new colleague, we clicked with each other."
   },
 
   // Appearance & Personality
-  "Silly": {
-    translation: "Bobo / Tolo / Engraçado",
-    definition: "Showing a lack of serious thought, or being playful and funny.",
-    example: "He made a silly joke that made everyone in the room laugh."
+  "What does she/he look like?": {
+    translation: "Como ela/ele é fisicamente? / Qual a aparência dele/dela?",
+    definition: "A question asking about someone's physical appearance, like height, hair, or style.",
+    example: "I have a blind date tonight. What does he look like?"
   },
-  "Laid-back": {
-    translation: "Descontraído / Tranquilo / Relaxado",
-    definition: "Relaxed and easygoing, not easily worried or stressed.",
-    example: "Our new boss is very laid-back and easy to talk to."
+  "silly": {
+    translation: "Bobo / Engraçado / Tolo",
+    definition: "Playful, funny, or showing a lack of serious thought in a harmless way.",
+    example: "He was wearing a silly hat that made all the children laugh."
   },
-  "Strict": {
-    translation: "Rígido / Exigente / Rigoroso",
-    definition: "Demanding that rules are obeyed and observed closely.",
-    example: "My teacher is very strict about submitting homework on time."
+  "come along": {
+    translation: "Acompanhar / Progredir / Aparecer",
+    definition: "To accompany someone, arrive, or make progress.",
+    example: "We are going to the coffee shop; would you like to come along?"
   },
-  "Stubborn": {
+  "outgoing": {
+    translation: "Extrovertido / Sociável",
+    definition: "Friendly, socially confident, and enjoying the company of other people.",
+    example: "My sister is very outgoing and makes friends easily wherever she goes."
+  },
+  "laid-back": {
+    translation: "Descontraído / Tranquilo",
+    definition: "Relaxed, calm, and not easily stressed or worried about rules.",
+    example: "He has a laid-back lifestyle and doesn't worry about minor issues."
+  },
+  "strict": {
+    translation: "Rígido / Rigoroso / Exigente",
+    definition: "Expecting people to obey rules or behave in a certain precise way.",
+    example: "My stepfather was quite strict when I was growing up."
+  },
+  "stubborn": {
     translation: "Teimoso / Obstinado",
-    definition: "Determined not to change your opinion or attitude.",
-    example: "She is too stubborn to admit that she made a mistake."
+    definition: "Refusing to change your mind or behavior even when there are good reasons to do so.",
+    example: "She is so stubborn that she won't apologize even when she knows she's wrong."
+  },
+  "quite": {
+    translation: "Bastante / Bem",
+    definition: "To a noticeable degree; moderately or very.",
+    example: "My niece is quite short, but she runs exceptionally fast."
+  },
+  "old-fashioned": {
+    translation: "Antiquado / Tradicional / À moda antiga",
+    definition: "Belonging to a past style or time; not modern.",
+    example: "My uncle is a bit old-fashioned and still writes letters by hand."
+  },
+  "pretty": {
+    translation: "Bonita / Lindo (também significa 'bastante')",
+    definition: "Attractive in a delicate or pleasant way; can also mean 'fairly/moderately'.",
+    example: "She bought a pretty dress for the family gathering."
+  },
+  "forgetful": {
+    translation: "Esquecido(a)",
+    definition: "Often forgetting things; absent-minded.",
+    example: "As I grow older, I find myself becoming more forgetful."
+  },
+  "cheerful": {
+    translation: "Alegre / Bem-humorado",
+    definition: "Noticeably happy, optimistic, and friendly in spirit.",
+    example: "He always has a cheerful smile on his face, which brightens my day."
+  },
+  "over the years": {
+    translation: "Ao longo dos anos",
+    definition: "Happening or changing gradually over a long period.",
+    example: "Over the years, our childhood friendship grew even stronger."
+  },
+  "went on": {
+    translation: "Continuou / Prosseguiu",
+    definition: "Continued to happen or do something; proceeded.",
+    example: "Despite the cold, we went on with our outdoor hike."
+  },
+  "showcase": {
+    translation: "Exibir / Demonstrar",
+    definition: "To exhibit or display the best qualities or features of something.",
+    example: "The festival is a great way to showcase local music and food."
+  },
+  "revolve around - something/someone": {
+    translation: "Girar em torno de - algo/alguém",
+    definition: "To have someone or something as the main subject, focus, or interest.",
+    example: "Her entire life seems to revolve around her children."
+  },
+  "invasive": {
+    translation: "Invasivo(a)",
+    definition: "Intruding on someone's privacy or personal space without permission.",
+    example: "Asking about someone's salary is considered quite invasive in many cultures."
+  },
+  "gender roles": {
+    translation: "Papéis de gênero",
+    definition: "Social expectations and behaviors associated with being male or female.",
+    example: "In modern societies, traditional gender roles are changing rapidly."
+  },
+  "rubs me the wrong way": {
+    translation: "Não me bate bem / Irrita-me",
+    definition: "To annoy or irritate someone slightly without a clear reason.",
+    example: "The way he always speaks over other people really rubs me the wrong way."
+  },
+  "easygoing": {
+    translation: "Maleável / Fácil de lidar / Despreocupado",
+    definition: "Relaxed and tolerant in approach; easy to get along with.",
+    example: "She is very easygoing, so she doesn't mind where we go for dinner."
+  },
+  "fun to be around": {
+    translation: "Divertido de se ter por perto",
+    definition: "Pleasant, entertaining, and exciting company.",
+    example: "He is outgoing and has a great sense of humor, so he is very fun to be around."
+  },
+  "help or hurt": {
+    translation: "Ajudar ou prejudicar",
+    definition: "To produce positive assistance or negative impact on a situation.",
+    example: "Your comments during the meeting can either help or hurt our proposal."
+  },
+  "own good": {
+    translation: "Próprio bem",
+    definition: "For someone's personal benefit or advantage, even if they dislike it.",
+    example: "I'm telling you this for your own good, because I care about your future."
+  },
+  "would rather": {
+    translation: "Preferiria / Preferia",
+    definition: "Used to express a preference for one thing over another.",
+    example: "I would rather drink a hot coffee than a cold soda right now."
+  },
+  "two-faced": {
+    translation: "Duas-caras / Falso",
+    definition: "Insincere, deceitful, or saying different things to different people.",
+    example: "Be careful with her; she is two-faced and spreads gossip behind your back."
+  },
+  "short/tall": {
+    translation: "Baixo / Alto",
+    definition: "Measuring a small or large distance from bottom to top; below or above average height.",
+    example: "My father is very tall, but my stepmother is short."
+  },
+  "average height/medium height": {
+    translation: "Altura média",
+    definition: "Neither short nor tall; of typical height for a human.",
+    example: "She has brown hair, dark eyes, and is of average height."
   },
   "He is very tall": {
     translation: "Ele é muito alto",
-    definition: "Describes a male person who has a height well above average.",
-    example: "He is very tall, so he plays basketball exceptionally well."
+    definition: "Having a high stature (male).",
+    example: "He is very tall and has to bend down to pass through low doorways."
   },
   "She is quite short": {
-    translation: "Ela é bem baixinha / curta",
-    definition: "Describes a female person whose height is below average.",
-    example: "She is quite short, so she often needs a stool to reach high shelves."
+    translation: "Ela é bem baixinha",
+    definition: "Having a low stature (female).",
+    example: "She is quite short, so she often wears high heels."
   },
-  "Bald": {
+  "thin": {
+    translation: "Magro(a)",
+    definition: "Having little extra flesh or fat on the body.",
+    example: "He stayed thin even though he ate a lot of fast food."
+  },
+  "fat": {
+    translation: "Gordo(a) / Forte",
+    definition: "Having a large amount of excess flesh or body weight.",
+    example: "Our family dog became a bit fat after we fed him extra treats."
+  },
+  "slender": {
+    translation: "Esguio(a) / Esbelto(a)",
+    definition: "Gracefully thin, elegant, and slight in build.",
+    example: "The ballet dancer had a slender and graceful figure."
+  },
+  "slim": {
+    translation: "Magro(a) / Esbelto(a) / Elegante",
+    definition: "Thin in an attractive and healthy way.",
+    example: "She exercises regularly to stay slim and fit."
+  },
+  "lean": {
+    translation: "Magro e forte / Sem gordura / Atlético",
+    definition: "Thin and healthy, with strong, clear muscles and little fat.",
+    example: "As an athlete, he has a lean and powerful physique."
+  },
+  "petite": {
+    translation: "Pequena / Delicada (mulher)",
+    definition: "Attractively small and dainty (describing a female body).",
+    example: "She is quite petite, so children's clothing sometimes fits her."
+  },
+  "slight": {
+    translation: "Pequeno / Frágil / Delgado",
+    definition: "Small, thin, and delicate in physical build.",
+    example: "She is of slight build but has surprising physical strength."
+  },
+  "curvy": {
+    translation: "Com curvas / Violão",
+    definition: "Having an attractively curved female shape with prominent hips and bust.",
+    example: "She embraced her curvy body and wore form-fitting dresses."
+  },
+  "voluptuous": {
+    translation: "Voluptuosa / Curvilínea",
+    definition: "Full-figured and curvaceous in a highly attractive way.",
+    example: "Her voluptuous figure made her a famous model for evening gowns."
+  },
+  "stocky": {
+    translation: "Atarracado / Forte / Robusto",
+    definition: "Broad and sturdily built; thick-set and strong.",
+    example: "He is a stocky guy who looks like a rugby player."
+  },
+  "I have blond hair": {
+    translation: "Tenho cabelo loiro",
+    definition: "Describing having pale yellow or golden-colored hair.",
+    example: "I have blond hair and blue eyes, just like my father."
+  },
+  "I am blonde-haired": {
+    translation: "Sou loiro(a) / Tenho cabelos loiros",
+    definition: "Another way to describe having blond hair.",
+    example: "I am blonde-haired and have fair skin, so I sunburn easily."
+  },
+  "I have fair hair": {
+    translation: "Tenho cabelo claro",
+    definition: "Having light-colored hair, such as blond or light brown.",
+    example: "Most of my relatives have fair hair and light eyes."
+  },
+  "I have dark eyes": {
+    translation: "Tenho olhos escuros",
+    definition: "Having deep brown or black eyes.",
+    example: "I have dark eyes and wavy black hair."
+  },
+  "bald": {
     translation: "Careca",
-    definition: "Having little or no hair on the head.",
-    example: "He went completely bald in his early thirties."
+    definition: "Having little or no hair on the scalp.",
+    example: "My stepfather decided to shave his head completely when he started going bald."
+  },
+  "short hair": {
+    translation: "Cabelo curto",
+    definition: "Hair cut close to the scalp or above the shoulders.",
+    example: "I prefer short hair in the summer because it keeps me cool."
+  },
+  "long hair": {
+    translation: "Cabelo comprido",
+    definition: "Hair that grows below the shoulders or waist.",
+    example: "She tied her long hair in a neat ponytail before the gym session."
   },
   "My hair goes down to my waist": {
-    translation: "Meu cabelo vai até a cintura",
-    definition: "Describes having extremely long hair that reaches the waist level.",
-    example: "I haven't cut my hair for three years, so now my hair goes down to my waist."
+    translation: "Meu cabelo vai até a minha cintura",
+    definition: "Having exceptionally long hair that reaches the waist level.",
+    example: "I haven't trimmed it in four years, so now my hair goes down to my waist."
   },
-  "Smartphone / Cell phone": {
-    translation: "Smartphone / Celular",
-    definition: "A portable touch-screen device that connects to the internet and runs mobile applications.",
-    example: "I can't leave the house without my smartphone."
+  "straight hair": {
+    translation: "Cabelo liso",
+    definition: "Hair without curls, waves, or bends.",
+    example: "Her straight hair was so shiny and silky in the light."
   },
-  "Keys": {
-    translation: "Chaves",
-    definition: "Small metal objects specifically cut to fit and operate a door lock or ignition.",
-    example: "I always spend five minutes looking for my house keys."
+  "wavy hair": {
+    translation: "Cabelo ondulado",
+    definition: "Hair that has smooth, gentle curves or waves but is not fully curly.",
+    example: "She styled her wavy hair with sea salt spray for a beachy look."
   },
-  "Wallet": {
-    translation: "Carteira",
-    definition: "A small, flat pocket-sized folding container for carrying money, cards, and ID.",
-    example: "I keep my driver's license and credit cards in my wallet."
+  "curly hair": {
+    translation: "Cabelo cacheado",
+    definition: "Hair that grows in tight spirals, loops, or curls.",
+    example: "He inherited his beautiful curly hair from his mother's side."
   },
-  "Earphones / Headphones": {
-    translation: "Fones de ouvido",
-    definition: "Audio devices worn inside or over the ears, allowing private listening of sound.",
-    example: "I like to listen to podcasts using my headphones on the bus."
+  "afro hair": {
+    translation: "Cabelo afro / Crespo",
+    definition: "Naturally dense, coily, and textured hair typical of people of African descent.",
+    example: "She proudly wears her beautiful, voluminous afro hair."
   },
-  "Backpack / Bag": {
-    translation: "Mochila / Bolsa",
-    definition: "A sturdy fabric pack carried over the shoulders or a general-purpose portable container.",
-    example: "I put my laptop and notebook inside my backpack."
+  "soft hair/damaged hair": {
+    translation: "Cabelo macio / Cabelo danificado",
+    definition: "Describing the condition of hair, being smooth and healthy or dry and split.",
+    example: "Using conditioner makes my soft hair even silkier, whereas bleaching causes damaged hair."
   },
-  "Water bottle": {
-    translation: "Garrafa de água",
-    definition: "A portable bottle designed to safely hold and carry drinking water or other liquids.",
-    example: "Keeping a water bottle on my desk helps me stay hydrated."
+  "silky hair": {
+    translation: "Cabelo sedoso",
+    definition: "Hair that is incredibly smooth, soft, and shiny like silk.",
+    example: "The salon treatment left her with beautiful, silky hair."
   },
-  "Glasses / Sunglasses": {
-    translation: "Óculos / Óculos de sol",
-    definition: "Lenses supported by a frame worn over the nose and ears to assist vision or protect against the sun.",
-    example: "I need to wear my glasses to read the computer screen."
+  "Dry hair": {
+    translation: "Cabelo seco / Cabelo ressecado",
+    definition: "Hair that lacks moisture, feeling rough or brittle to the touch.",
+    example: "Using a hairdryer too often can leave you with very dry hair."
   },
-  "Notebook": {
-    translation: "Caderno / Bloco de notas (Nota: para o computador portátil, use \"laptop\")",
-    definition: "A bound book with blank, ruled, or grid paper intended for handwriting notes and sketches.",
-    example: "I write down my daily tasks in a small notebook."
+  "fair skin": {
+    translation: "Pele clara",
+    definition: "Light-colored skin that is sensitive to sunlight.",
+    example: "Because she has fair skin, she always wears high factor sunscreen."
   },
-  "Charger": {
-    translation: "Carregador (de celular, notebook, etc.)",
-    definition: "A cable and power adapter accessory used to supply electric power to rechargeable batteries.",
-    example: "Can I borrow your phone charger for a look? My battery is low."
+  "dark skin": {
+    translation: "Pele escura",
+    definition: "Skin naturally rich in melanin, having a deep, brown shade.",
+    example: "Her dark skin looks absolutely beautiful in bright yellow clothing."
   },
-  "Watch / Smartwatch": {
-    translation: "Relógio / Relógio inteligente",
-    definition: "A wearable timekeeping instrument on the wrist, or an interactive smart accessory syncing with phone alerts.",
-    example: "My smartwatch buzzes every time I receive a text message."
+  "Shape": {
+    translation: "Forma / Silhueta / Condição física",
+    definition: "The physical silhouette, form, or standard of fitness of a person.",
+    example: "He runs every morning to stay in good shape."
+  },
+  "a few of": {
+    translation: "Alguns de / Poucos de",
+    definition: "A small number of people or things from a larger group.",
+    example: "Only a few of my colleagues came along to the restaurant."
   }
 };
 
@@ -391,7 +780,14 @@ export default function App() {
     try {
       const saved = localStorage.getItem("plot_twist_categories_v3");
       const parsed = saved ? JSON.parse(saved) : {};
-      const merged = { ...CATEGORIES, ...parsed };
+      
+      const merged: Record<string, string[]> = {};
+      Object.keys(CATEGORIES).forEach((cat) => {
+        const defaultWords = CATEGORIES[cat] || [];
+        const savedWords = parsed[cat] || [];
+        // Combine default words and saved words to preserve both
+        merged[cat] = Array.from(new Set([...defaultWords, ...savedWords]));
+      });
       merged["Objects"] = CATEGORIES["Objects"];
       
       const cleaned: Record<string, string[]> = {};
@@ -414,7 +810,11 @@ export default function App() {
       const cleaned: Record<string, { translation?: string; definition: string; example: string }> = {};
       Object.keys(merged).forEach((word) => {
         if (word.toLowerCase() !== "cake") {
-          cleaned[word] = merged[word];
+          // Keep the default translation, definition and example if they were updated
+          cleaned[word] = {
+            ...(WORD_MEANINGS[word] || {}),
+            ...(parsed[word] || {})
+          };
         }
       });
       return cleaned;
